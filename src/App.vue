@@ -18,7 +18,7 @@
       attribGlyphValSpecial="True"
       @item-selected="pokemonSelected"
       :width="800"
-      :height="600"
+      :height="500"
     />
     <BarChart 
       class="bar-chart" 
@@ -30,7 +30,8 @@
       attribY="value"  
       labelY="Stat Strength"
       :width="800"
-      :height="600" />
+      :height="500" />
+    <h1 v-else class="bar-chart-info">Select a Pokemon</h1>
   </div>
 </template>
 
@@ -64,12 +65,15 @@ export default {
           relCatchRate: d.Catch_Rate / maxCatchRate,
         })
       })
-
-      this.pokemonSelected(this.dataset[0])
     });
   },
   methods: {
     pokemonSelected(p) {
+      if (p == null) {
+        this.datasetSelected = null
+        return
+      }
+
       let pokemon = d3.filter(this.dataset, d => d.Number == p.Number)[0]
       
       let entries = []
@@ -95,17 +99,27 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  color: hsl(210, 29%, 24%);
+  display: grid;
+  grid-template-rows: 5vh 60vh auto;
+  grid-template-columns: 1fr 10fr 10fr 1fr;
+  grid-template-areas: 
+    ". . . ." 
+    ". overview detail ."
+    ". . . .";
 }
 
 .scatter-plot {
-  width: 800px;
-  float: left;
+  grid-area: overview;
 }
 
 .bar-chart {
-  width: 800px;
-  float: left;
+  grid-area: detail;
+}
+
+.bar-chart-info {
+  grid-area: detail;
+  color: rgb(214, 214, 214);
+  margin: auto;
 }
 </style>
